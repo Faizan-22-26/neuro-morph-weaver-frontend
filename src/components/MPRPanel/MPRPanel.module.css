@@ -1,0 +1,82 @@
+.mprPanel {
+    /* Inherits panel styles */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .title {
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: var(--border-width) solid var(--border-color);
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--accent-secondary); /* Match other panel titles */
+  }
+  
+  .viewControls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .currentView {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+  }
+  
+  .buttonGroup {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .viewButton {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8em;
+    min-width: 40px;
+    background-color: var(--background-primary); /* Subtle background */
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+  }
+  .viewButton:hover {
+    background-color: var(--border-color);
+    color: var(--text-primary);
+  }
+  
+  
+  .sliceViewer {
+    flex-grow: 1; /* Take remaining space */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-primary); /* Black background for image */
+    border-radius: 4px;
+    min-height: 200px; /* Ensure minimum height */
+    overflow: hidden; /* Clip image if needed */
+    margin-bottom: 1rem;
+  }
+  
+  .sliceImage {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Scale image nicely */
+  }
+  
+  .placeholder {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 1rem;
+  }
+  
+  .advancedControls {
+    /* Styles for additional controls if added */
+  }
+  
+  .note {
+    font-size: 0.8em;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    text-align: center;
+  }

@@ -1,0 +1,97 @@
+.infoPanel {
+    /* Inherits panel styles */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .title {
+    margin: 0 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: var(--border-width) solid var(--border-color);
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--accent-secondary);
+  }
+  
+  .regionInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed var(--border-color);
+  }
+  
+  .label {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    margin-right: 0.5rem;
+  }
+  
+  .valueRegion {
+    font-size: 0.95em;
+    color: var(--text-primary);
+    font-weight: 500;
+    text-align: right;
+  }
+  
+  
+  .metricsContainer {
+    flex-grow: 1;
+    min-height: 100px; /* Ensure some space for metrics */
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem; /* Space between metric items */
+  }
+  
+  .metricItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9em;
+  }
+  
+  .metricItem .label {
+    color: var(--text-secondary);
+  }
+  
+  .metricItem .value {
+    color: var(--text-primary);
+    font-weight: 500;
+    font-family: var(--font-mono); /* Monospaced font for numbers */
+  }
+  
+  .statusLoading, .statusError, .placeholder {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 1rem 0;
+    flex-grow: 1; /* Center vertically if container is flex */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .statusLoading { color: var(--loading-color); }
+  .statusError { color: var(--error-color); }
+  
+  
+  .chartsPlaceholder {
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed var(--border-color);
+    min-height: 50px; /* Placeholder height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .chartTitle {
+      font-size: 0.9em;
+      color: var(--text-secondary);
+      margin: 0 0 0.5rem 0;
+  }
+  .note {
+    font-size: 0.8em;
+    color: var(--text-secondary);
+    text-align: center;
+  }

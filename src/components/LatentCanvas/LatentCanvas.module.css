@@ -1,0 +1,31 @@
+.latentCanvasPanel {
+    /* Inherits panel styles */
+    display: flex;
+    flex-direction: column;
+    min-height: 250px; /* Ensure minimum height for the plot */
+  }
+  
+  .title {
+    margin: 0 0 0.5rem 0; /* Less bottom margin if plot is primary content */
+    padding-bottom: 0.5rem;
+    border-bottom: var(--border-width) solid var(--border-color);
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--accent-secondary);
+  }
+  
+  .plotContainer {
+    flex-grow: 1; /* Allow plot to take available space */
+    min-height: 200px; /* Min height for the plot itself */
+    width: 100%; /* Ensure it takes full width */
+  }
+  
+  /* Optional: Style Plotly elements specifically if needed */
+  /* .plotContainer :global(.plotly) { ... } */
+  
+  .note {
+    font-size: 0.8em;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    text-align: center;
+  }

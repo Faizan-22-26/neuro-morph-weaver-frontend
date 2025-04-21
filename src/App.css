@@ -1,0 +1,59 @@
+.appLayout {
+    display: grid;
+    /* Adjust grid layout as needed. Example: 70% / 30% split */
+    grid-template-columns: minmax(0, 3fr) minmax(300px, 1fr); /* Main view flexible, side panel min 300px */
+    grid-template-rows: 100vh; /* Full height */
+    height: 100vh;
+    width: 100vw;
+    gap: 10px; /* Gap between main view and side panel */
+    padding: 10px; /* Padding around the whole layout */
+    box-sizing: border-box;
+    background-color: var(--background-primary);
+  }
+  
+  .mainView {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    height: 100%; /* Fill the grid area */
+    overflow: hidden; /* Crucial for the canvas */
+    position: relative; /* For overlay positioning */
+    border-radius: var(--panel-border-radius); /* Optional: round corners */
+    background-color: var(--background-secondary); /* Background while loading */
+  }
+  
+  .sidePanel {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    height: 100%; /* Fill the grid area */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Gap between panels within the side panel */
+    overflow-y: auto; /* Allow side panel to scroll if content exceeds height */
+    padding-right: 5px; /* Space for scrollbar */
+  }
+  
+  /* Styling for Loading/Error Overlays */
+  .loadingOverlay,
+  .errorOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 10;
+    border-radius: inherit; /* Match parent border radius */
+  }
+  
+  .errorOverlay {
+    color: var(--error-color);
+    flex-direction: column; /* Allow multiline errors */
+    text-align: center;
+    padding: 20px;
+  }
+
+  

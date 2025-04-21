@@ -1,0 +1,8 @@
+/* src/components/ThreeDViewport/ThreeDViewport.module.css */
+.renderCanvas {
+    width: 100%;
+    height: 100%;
+    display: block; /* Prevents potential extra space below canvas */
+    outline: none; /* Remove default browser outline on focus */
+    /* touch-action: none; already set inline for best practice with pointer events */
+  }
