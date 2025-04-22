@@ -1,19 +1,17 @@
+// src/components/ControlPanel/ControlPanel.jsx (Modified - Add Time Slider)
 import React, { useRef } from 'react';
 import { useAppStore } from '../../store/appStore';
-import styles from './ControlPanel.module.css'; // Import component-specific styles
+import styles from './ControlPanel.module.css';
 
 const ControlPanel = () => {
-  // Select necessary state and actions from the store
   const {
-    progressionFactor, setProgressionFactor,
     uploadedEegFileName, uploadEegFile, clearEegData, isProcessingEeg, eegProcessingError,
     showAtlas, toggleAtlas,
     showDifferenceWeave, toggleDifferenceWeave,
-    // Add other state/actions if needed (e.g., EEG settings)
+    // Get time state/actions
+    timeIndex, maxTimeIndex, setTimeIndex, // <-- Added
+    fileUploaded // Added to conditionally show time slider
   } = useAppStore(state => ({
-    // Use selector for better performance if component re-renders often
-    progressionFactor: state.progressionFactor,
-    setProgressionFactor: state.setProgressionFactor,
     uploadedEegFileName: state.uploadedEegFileName,
     uploadEegFile: state.uploadEegFile,
     clearEegData: state.clearEegData,
@@ -23,35 +21,38 @@ const ControlPanel = () => {
     toggleAtlas: state.toggleAtlas,
     showDifferenceWeave: state.showDifferenceWeave,
     toggleDifferenceWeave: state.toggleDifferenceWeave,
+    timeIndex: state.timeIndex,             // <-- Added
+    maxTimeIndex: state.maxTimeIndex,       // <-- Added
+    setTimeIndex: state.setTimeIndex,         // <-- Added
+    fileUploaded: !!state.uploadedEegFileName // <-- Added
   }));
 
-  // Ref for the file input to programmatically clear it
   const fileInputRef = useRef(null);
-
-  const handleSliderChange = (event) => {
-    setProgressionFactor(parseFloat(event.target.value));
-  };
 
   const handleFileUpload = (event) => {
     const file = event.target.files?.[0];
     if (file) {
-      uploadEegFile(file); // Trigger the async action in the store
+      uploadEegFile(file);
     }
   };
 
   const handleClearEeg = () => {
       clearEegData();
-      // Reset the file input visually
       if (fileInputRef.current) {
           fileInputRef.current.value = '';
       }
   };
 
+  // Handler for time slider
+  const handleTimeSliderChange = (event) => {
+    setTimeIndex(parseInt(event.target.value, 10));
+  };
+
   return (
-    <div className={`${styles.controlPanel} panel`}> {/* Combine module and global styles */}
+    <div className={`${styles.controlPanel} panel`}>
       <h3 className={styles.title}>Controls</h3>
 
-      {/* EEG Upload Section */}
+      {/* EEG Upload Section (No changes here) */}
       <div className={styles.section}>
         <h4 className={styles.sectionTitle}>EEG Input</h4>
         <div className={styles.controlGroup}>
@@ -63,9 +64,9 @@ const ControlPanel = () => {
             className={styles.fileInput}
             type="file"
             id="eegFile"
-            accept=".edf,.bdf,.fif,application/octet-stream" // Specify accepted types
+            accept=".edf,.bdf,.fif,application/octet-stream"
             onChange={handleFileUpload}
-            disabled={isProcessingEeg} // Disable while processing
+            disabled={isProcessingEeg}
           />
            {uploadedEegFileName && !isProcessingEeg && !eegProcessingError && (
              <div className={styles.fileInfo}>
@@ -78,30 +79,33 @@ const ControlPanel = () => {
         </div>
       </div>
 
-       {/* Morphing Control Section */}
-      <div className={styles.section}>
-        <h4 className={styles.sectionTitle}>Morphing / Progression</h4>
-        <div className={styles.controlGroup}>
-          <label htmlFor="progressionSlider" className={styles.label}>
-             Progression State: {progressionFactor.toFixed(2)}
-          </label>
-          <input
-            className={styles.slider}
-            type="range"
-            id="progressionSlider"
-            min="0"
-            max="1"
-            step="0.01"
-            value={progressionFactor}
-            onChange={handleSliderChange}
-            aria-label="Progression State Slider"
-          />
+      {/* Time Control Section - Conditionally Rendered */}
+      {fileUploaded && !eegProcessingError && ( // Only show if EEG is loaded successfully
+        <div className={styles.section}>
+            <h4 className={styles.sectionTitle}>Time Navigation</h4>
+            <div className={styles.controlGroup}>
+            <label htmlFor="timeSlider" className={styles.label}>
+                Time Point: {timeIndex} / {maxTimeIndex}
+            </label>
+            <input
+                className={styles.slider} // Reuse slider style
+                type="range"
+                id="timeSlider"
+                min="0"
+                max={maxTimeIndex}
+                step="1"
+                value={timeIndex}
+                onChange={handleTimeSliderChange}
+                aria-label="Time Point Slider"
+            />
+            </div>
         </div>
-      </div>
+      )}
 
-      {/* Visualization Toggles Section */}
+
+      {/* Visualization Toggles Section (No changes here) */}
       <div className={styles.section}>
-        <h4 className={styles.sectionTitle}>Visualization Options</h4>
+        <h4 className={styles.sectionTitle}>Visualization Options (3D)</h4>
         <div className={styles.controlGroup}>
           <label className={styles.toggleLabel}>
             <input type="checkbox" checked={showAtlas} onChange={toggleAtlas} />
@@ -114,10 +118,8 @@ const ControlPanel = () => {
             <span>Highlight Morph Difference</span>
           </label>
         </div>
-        {/* Add more toggles here (e.g., EEG pattern visibility) */}
+        {/* Add more toggles here */}
       </div>
-
-      {/* Add other control sections as needed (e.g., EEG Frequency Band selector) */}
 
     </div>
   );

@@ -1,0 +1,57 @@
+/* Create file: src/components/TwoDSliceViewer/TwoDSliceViewer.module.css */
+.viewerContainer {
+    width: 100%;
+    height: 100%;
+    position: relative; /* Needed for positioning overlays */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000; /* Black background for medical images */
+    overflow: hidden; /* Ensure images don't overflow */
+    cursor: ns-resize; /* Indicate scroll interaction */
+  }
+  
+  .sliceImageBase {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Scale base image */
+    position: absolute;
+    top: 0;
+    left: 0;
+    user-select: none; /* Prevent image selection */
+    -webkit-user-drag: none; /* Prevent image dragging */
+  }
+  
+  .sliceImageOverlay {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Scale overlay image */
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.6; /* Adjust transparency */
+    mix-blend-mode: screen; /* Example blend mode, adjust as needed (screen, multiply, overlay etc.) */
+    pointer-events: none; /* Allow clicks/scrolls to pass through */
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  
+  .placeholder {
+    color: var(--text-secondary);
+    font-size: 1.1em;
+  }
+  
+  .sliceInfoOverlay {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--text-primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-family: var(--font-mono);
+    pointer-events: none; /* Don't interfere with scrolling */
+  }

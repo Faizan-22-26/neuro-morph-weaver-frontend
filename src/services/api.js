@@ -33,81 +33,95 @@ const handleResponse = async (response) => {
 };
 
 /**
- * Uploads an EEG file to the backend for processing.
+ * Processes EEG data (e.g., prepares time series, extracts features).
+ * Backend determines max slices/times.
  * @param {File} eegFile - The EEG file object.
- * @returns {Promise<object>} - Promise resolving to the backend response (e.g., { mriDataUrl: string, eegVizData?: any }).
+ * @returns {Promise<object>} - e.g., { success: true, maxSliceIndex: 150, maxTimeIndex: 75, message: "Processed" }
  */
-export const generateMriFromEeg = async (eegFile) => {
+export const processEegData = async (eegFile) => {
   const formData = new FormData();
-  formData.append('eeg_file', eegFile); // Ensure 'eeg_file' matches Flask backend expectation
-
-  console.log(`API CALL: POST ${API_BASE_URL}/generate-mri with file ${eegFile.name}`);
+  formData.append('eeg_file', eegFile);
+  console.log(`API CALL: POST ${API_BASE_URL}/process-eeg with file ${eegFile.name}`);
 
   // *** REPLACE WITH ACTUAL FETCH ***
-  // const response = await fetch(`${API_BASE_URL}/generate-mri`, {
+  // const response = await fetch(`${API_BASE_URL}/process-eeg`, {
   //   method: 'POST',
   //   body: formData,
-  //   // Add headers if needed, e.g., 'Accept': 'application/json'
   // });
   // return handleResponse(response);
 
   // *** PLACEHOLDER SIMULATION ***
-  await new Promise(resolve => setTimeout(resolve, 1500 + Math.random() * 1000)); // Simulate network delay
-  // Simulate potential error
-  // if (Math.random() > 0.8) {
-  //   throw new Error("Simulated backend processing error.");
-  // }
-  console.log("API SIMULATION: generateMriFromEeg successful.");
-  // Return dummy data structure matching expected success response
-  return { mriDataUrl: `https://via.placeholder.com/256x256.png?text=Generated+MRI+Slice+for+${eegFile.name.substring(0,10)}`, eegVizData: { message: "dummy EEG viz data" } };
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  console.log("API SIMULATION: processEegData successful.");
+  return { success: true, maxSliceIndex: 150, maxTimeIndex: 75, message: "Simulated EEG Processing Complete" };
+};
+
+
+/**
+ * Fetches the base slice image data for a given index and time.
+ * @param {number} sliceIndex
+ * @param {number} timeIndex
+ * @returns {Promise<string>} - Promise resolving to image data URL or base64 string.
+ */
+export const fetchSliceData = async (sliceIndex, timeIndex) => {
+    const params = new URLSearchParams({ slice: sliceIndex, time: timeIndex });
+    console.log(`API CALL: GET ${API_BASE_URL}/slice-data?${params.toString()}`);
+
+    // *** REPLACE WITH ACTUAL FETCH ***
+    // const response = await fetch(`${API_BASE_URL}/slice-data?${params.toString()}`);
+    // const blob = await response.blob(); // Assuming image data
+    // if (!response.ok) throw new Error('Failed to fetch slice data');
+    // return URL.createObjectURL(blob); // Convert blob to URL
+
+    // *** PLACEHOLDER SIMULATION ***
+    await new Promise(resolve => setTimeout(resolve, 20)); // Simulate fast fetch
+    return `https://via.placeholder.com/512x512/CCCCCC/000000?text=Slice+${sliceIndex}+T=${timeIndex}`; // Grey placeholder
 };
 
 /**
- * Fetches quantitative metrics for a given brain region and progression factor.
- * @param {string} regionId - The identifier of the brain region (e.g., 'hippocampus_L').
- * @param {number} progressionFactor - The current progression state (0 to 1).
- * @returns {Promise<object>} - Promise resolving to the metrics object (e.g., { volume: number, thickness: number }).
+ * Fetches the inference overlay data for a given index and time.
+ * @param {number} sliceIndex
+ * @param {number} timeIndex
+ * @returns {Promise<string>} - Promise resolving to image data URL or base64 string for the overlay.
  */
-export const getRegionMetrics = async (regionId, progressionFactor) => {
-   const params = new URLSearchParams({
-      region: regionId,
-      progression: progressionFactor.toFixed(4), // Send with reasonable precision
-   });
-   console.log(`API CALL: GET ${API_BASE_URL}/metrics?${params.toString()}`);
+export const fetchInferenceData = async (sliceIndex, timeIndex) => {
+    const params = new URLSearchParams({ slice: sliceIndex, time: timeIndex });
+    console.log(`API CALL: GET ${API_BASE_URL}/inference-data?${params.toString()}`);
 
+    // *** REPLACE WITH ACTUAL FETCH ***
+    // const response = await fetch(`${API_BASE_URL}/inference-data?${params.toString()}`);
+    // const blob = await response.blob(); // Assuming image data
+    // if (!response.ok) throw new Error('Failed to fetch inference data');
+    // return URL.createObjectURL(blob); // Convert blob to URL
+
+     // *** PLACEHOLDER SIMULATION ***
+     await new Promise(resolve => setTimeout(resolve, 30)); // Simulate fast fetch
+     // Simple color overlay placeholder
+     const intensity = Math.abs(sliceIndex - 75) / 75; // Example: intensity varies with slice index
+     const colorHex = intensity > 0.5 ? 'FF0000' : '00FF00'; // Red if far from center, Green if close
+     const alphaHex = Math.round(intensity * 150).toString(16).padStart(2, '0'); // Opacity varies
+     return `https://via.placeholder.com/512x512/${colorHex}${alphaHex}/FFFFFF?text=Infer+${sliceIndex}+T=${timeIndex}`;
+};
+
+
+// getRegionMetrics and getInitialData remain structurally similar,
+// ensure they use the correct endpoints and handle responses.
+export const getRegionMetrics = async (regionId) => {
+   const params = new URLSearchParams({ region: regionId });
+   console.log(`API CALL: GET ${API_BASE_URL}/metrics?${params.toString()}`);
    // *** REPLACE WITH ACTUAL FETCH ***
    // const response = await fetch(`${API_BASE_URL}/metrics?${params.toString()}`);
    // return handleResponse(response);
 
-
    // *** PLACEHOLDER SIMULATION ***
-   await new Promise(resolve => setTimeout(resolve, 150 + Math.random() * 200)); // Simulate faster fetch
-   // Simulate error
-   // if (regionId === 'error_region') {
-   //   throw new Error(`Simulated metrics fetch error for ${regionId}`);
-   // }
-   console.log("API SIMULATION: getRegionMetrics successful for", regionId);
-   // Return dummy metrics varying with progression
+   await new Promise(resolve => setTimeout(resolve, 50));
    return {
       region: regionId,
-      progression: progressionFactor,
-      volume: parseFloat(((1 - progressionFactor) * 2000 + Math.random() * 100).toFixed(2)),
-      thickness: parseFloat(((1 - progressionFactor) * 2.5 + Math.random() * 0.2).toFixed(3)),
+      volume: parseFloat((Math.random() * 2000 + 500).toFixed(2)),
+      thickness: parseFloat((Math.random() * 1.5 + 1.0).toFixed(3)),
       timestamp: Date.now(),
    };
 };
 
-/**
- * Placeholder to fetch initial application data if needed (e.g., list of subjects, default atlas).
- */
-export const getInitialData = async () => {
-   console.log(`API CALL: GET ${API_BASE_URL}/initial-data (Placeholder)`);
-   // const response = await fetch(`${API_BASE_URL}/initial-data`);
-   // return handleResponse(response);
-
-   // *** PLACEHOLDER SIMULATION ***
-   await new Promise(resolve => setTimeout(resolve, 300));
-   return { defaultAtlas: 'Desikan-Killiany', subjects: [{id: 'sub-01'}, {id: 'sub-02'}] };
-};
-
-// Add other API functions as needed (e.g., fetch full EEG data, save/load state).
+// getInitialData placeholder remains useful if needed
+export const getInitialData = async () => { /* ... keep placeholder or implement ... */ };
